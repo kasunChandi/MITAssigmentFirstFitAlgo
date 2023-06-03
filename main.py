@@ -12,7 +12,7 @@ class SlotManager:
         self.free_memory = memory_size - os_size
         self.head = MemorySlot(None, self.free_memory)
 
-    def allocate_memory(self, process_id, size):
+    def allocate(self, process_id, size):
         current = self.head
 
         while current:
@@ -21,9 +21,9 @@ class SlotManager:
                     current.process_id = process_id
                     current.is_allocated = True
                 else:
-                    new_block = MemorySlot(process_id, size)
-                    new_block.next = current.next
-                    current.next = new_block
+                    new_slot = MemorySlot(process_id, size)
+                    new_slot.next = current.next
+                    current.next = new_slot
                     current.size -= size
                     current.process_id = current.next.process_id
                     current.is_allocated = True
@@ -31,13 +31,13 @@ class SlotManager:
                 print(f"Process {process_id} allocated {size}KB of memory.")
                 return
             current = current.next
-        print(f"Error: Not enough memory available for Process {process_id}")
+        print(f"Error: Not enough memory Process {process_id}")
 
     def release_memory(self, process_id2):
         current = self.head
-        print(current.process_id)
-        print(process_id2)
-        print(current.is_allocated)
+       # print(current.process_id)
+       #print(process_id2)
+       # print(current.is_allocated)
         while current:
             if current.process_id == process_id2 and current.is_allocated:
                 current.process_id = None
@@ -85,7 +85,7 @@ while True:
     if choice == 1:
         process_id = input("Enter the process Name/ID: ")
         size = int(input("Enter the memory size needed in KB: "))
-        slot.allocate_memory(process_id, size)
+        slot.allocate(process_id, size)
     elif choice == 2:
         process_id = input("Enter the process ID to release memory: ")
         slot.release_memory(process_id)
